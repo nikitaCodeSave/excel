@@ -57,8 +57,15 @@ class RouterDependencies:
 
 
 # Создаём Router Agent
+# Определяем модель в зависимости от провайдера
+_model_string = (
+    f"{settings.LLM_PROVIDER}:{settings.LLM_MODEL}"
+    if settings.LLM_PROVIDER == "openai"
+    else f"ollama:{settings.LLM_MODEL}"
+)
+
 router_agent = Agent(
-    model=f"ollama:{settings.LLM_MODEL}",
+    model=_model_string,
     deps_type=RouterDependencies,
     system_prompt=ROUTER_SYSTEM_PROMPT,
 )
