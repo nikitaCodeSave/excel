@@ -2,6 +2,10 @@
 
 > Интеллектуальная система обработки Excel/CSV файлов с использованием локальной LLM и PydanticAI
 
+**📦 Updated to latest versions (October 2025)**
+- **React 19.2**, **Vite 7**, **Tailwind CSS v4**, **PydanticAI 1.6**, **NumPy 2.3**, **FastAPI 0.120**
+- ⚠️ **Important**: Contains breaking changes. See [MIGRATION_NOTES.md](./MIGRATION_NOTES.md) before updating existing installations.
+
 ## 🎯 Возможности
 
 - **📊 Анализ данных**: Автоматический анализ структуры, статистики, ответы на вопросы
@@ -36,6 +40,12 @@
 │  (Ollama)       │
 └─────────────────┘
 ```
+
+## 📋 Требования
+
+- **Python**: 3.12+
+- **Node.js**: 20.19+ или 22.12+ (⚠️ Node.js 18 больше не поддерживается Vite 7)
+- **Ollama**: Для локальной LLM
 
 ## 🚀 Быстрый старт
 
