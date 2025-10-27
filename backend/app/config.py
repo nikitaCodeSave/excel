@@ -15,9 +15,11 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
 
     # LLM Settings
-    LLM_MODEL: str = os.getenv("LLM_MODEL", "llama3.2:latest")  # Ollama model
-    LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "http://localhost:11434")
+    LLM_MODEL: str = os.getenv("LLM_MODEL", "gpt-4o-mini")  # OpenAI model
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "openai")  # openai or ollama
+    LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "http://localhost:11434")  # For Ollama
     LLM_TIMEOUT: int = 300  # 5 минут
+    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")  # OpenAI API key
 
     # File Storage
     UPLOAD_DIR: Path = Path("/tmp/excel_processor/sessions")

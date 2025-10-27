@@ -70,23 +70,29 @@ class PandasCode(BaseModel):
 
 
 # Создаём Transform Agent
-transform_agent = Agent(
-    model=f"ollama:{settings.LLM_MODEL}",
+# Определяем модель в зависимости от провайдера
+_model_string = (
+    f"{settings.LLM_PROVIDER}:{settings.LLM_MODEL}"
+    if settings.LLM_PROVIDER == "openai"
+    else f"ollama:{settings.LLM_MODEL}"
+)
+
+transform_agent = Agent[TransformDependencies, PandasCode](
+    model=_model_string,
     deps_type=TransformDependencies,
     system_prompt=TRANSFORM_SYSTEM_PROMPT,
-    result_type=PandasCode,
     retries=3,
 )
 
 
-@transform_agent.tool_plain
+@transform_agent.tool
 def get_column_names(ctx: RunContext[TransformDependencies]) -> List[str]:
     """Получить список столбцов DataFrame"""
     df = file_manager.load_dataframe(ctx.deps.session_id)
     return df.columns.tolist()
 
 
-@transform_agent.tool_plain
+@transform_agent.tool
 def preview_data(
     ctx: RunContext[TransformDependencies],
     rows: int = 5
@@ -109,7 +115,7 @@ def preview_data(
     return cleaned
 
 
-@transform_agent.tool_plain
+@transform_agent.tool
 def get_dataframe_shape(ctx: RunContext[TransformDependencies]) -> Dict[str, int]:
     """Получить размеры DataFrame"""
     df = file_manager.load_dataframe(ctx.deps.session_id)

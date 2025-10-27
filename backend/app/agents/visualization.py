@@ -69,37 +69,43 @@ class VisualizationSpec(BaseModel):
 
 
 # Создаём Visualization Agent
-visualization_agent = Agent(
-    model=f"ollama:{settings.LLM_MODEL}",
+# Определяем модель в зависимости от провайдера
+_model_string = (
+    f"{settings.LLM_PROVIDER}:{settings.LLM_MODEL}"
+    if settings.LLM_PROVIDER == "openai"
+    else f"ollama:{settings.LLM_MODEL}"
+)
+
+visualization_agent = Agent[VisualizationDependencies, VisualizationSpec](
+    model=_model_string,
     deps_type=VisualizationDependencies,
     system_prompt=VISUALIZATION_SYSTEM_PROMPT,
-    result_type=VisualizationSpec,
     retries=2,
 )
 
 
-@visualization_agent.tool_plain
+@visualization_agent.tool
 def get_column_names(ctx: RunContext[VisualizationDependencies]) -> List[str]:
     """Получить список всех столбцов"""
     df = file_manager.load_dataframe(ctx.deps.session_id)
     return df.columns.tolist()
 
 
-@visualization_agent.tool_plain
+@visualization_agent.tool
 def get_numeric_columns(ctx: RunContext[VisualizationDependencies]) -> List[str]:
     """Получить список числовых столбцов"""
     df = file_manager.load_dataframe(ctx.deps.session_id)
     return df.select_dtypes(include=['number']).columns.tolist()
 
 
-@visualization_agent.tool_plain
+@visualization_agent.tool
 def get_categorical_columns(ctx: RunContext[VisualizationDependencies]) -> List[str]:
     """Получить список категориальных столбцов"""
     df = file_manager.load_dataframe(ctx.deps.session_id)
     return df.select_dtypes(include=['object', 'category']).columns.tolist()
 
 
-@visualization_agent.tool_plain
+@visualization_agent.tool
 def preview_data(
     ctx: RunContext[VisualizationDependencies],
     rows: int = 5

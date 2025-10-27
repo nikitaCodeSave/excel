@@ -1,6 +1,6 @@
 # Excel AI Processor с PydanticAI
 
-> Интеллектуальная система обработки Excel/CSV файлов с использованием локальной LLM и PydanticAI
+> Интеллектуальная система обработки Excel/CSV файлов с использованием AI (OpenAI/Ollama) и PydanticAI
 
 **📦 Updated to latest versions (October 2025)**
 - **React 19.2**, **Vite 7**, **Tailwind CSS v4**, **PydanticAI 1.6**, **NumPy 2.3**, **FastAPI 0.120**
@@ -43,29 +43,38 @@
 
 ## 📋 Требования
 
-- **Python**: 3.12+
+- **Python**: 3.11+ (3.12+ рекомендуется)
 - **Node.js**: 20.19+ или 22.12+ (⚠️ Node.js 18 больше не поддерживается Vite 7)
-- **Ollama**: Для локальной LLM
+- **OpenAI API ключ** ИЛИ **Ollama**: Для AI функций
 
 ## 🚀 Быстрый старт
 
-### 1. Установка Ollama
+**📖 См. [QUICKSTART.md](QUICKSTART.md) для подробных инструкций**
 
+### Вариант 1: OpenAI API (рекомендуется)
+
+**1. Получите ключ:** https://platform.openai.com/api-keys
+
+**2. Настройте .env:**
 ```bash
-# Linux/Mac
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Или скачать с https://ollama.com/download
+cd backend
+echo "OPENAI_API_KEY=sk-your-key" >> .env
+echo "LLM_PROVIDER=openai" >> .env
 ```
 
-### 2. Загрузка модели
+### Вариант 2: Ollama (бесплатно, локально)
 
+**1. Установка:**
 ```bash
-# Рекомендуется llama3.2 или llama3.1
+curl -fsSL https://ollama.com/install.sh | sh
 ollama pull llama3.2:latest
+```
 
-# Или другая модель
-ollama pull mistral:latest
+**2. Настройка:**
+```bash
+cd backend
+echo "LLM_PROVIDER=ollama" >> .env
+echo "LLM_MODEL=llama3.2:latest" >> .env
 ```
 
 ### 3. Установка Python зависимостей

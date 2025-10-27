@@ -62,15 +62,22 @@ class ColumnStatistics(BaseModel):
 
 
 # Создаём Analysis Agent
+# Определяем модель в зависимости от провайдера
+_model_string = (
+    f"{settings.LLM_PROVIDER}:{settings.LLM_MODEL}"
+    if settings.LLM_PROVIDER == "openai"
+    else f"ollama:{settings.LLM_MODEL}"
+)
+
 analysis_agent = Agent(
-    model=f"ollama:{settings.LLM_MODEL}",
+    model=_model_string,
     deps_type=AnalysisDependencies,
     system_prompt=ANALYSIS_SYSTEM_PROMPT,
     retries=2,
 )
 
 
-@analysis_agent.tool_plain
+@analysis_agent.tool
 def get_dataframe_info(ctx: RunContext[AnalysisDependencies]) -> DataFrameInfo:
     """Получить общую информацию о DataFrame"""
     df = file_manager.load_dataframe(ctx.deps.session_id)
@@ -96,7 +103,7 @@ def get_dataframe_info(ctx: RunContext[AnalysisDependencies]) -> DataFrameInfo:
     )
 
 
-@analysis_agent.tool_plain
+@analysis_agent.tool
 def get_column_statistics(
     ctx: RunContext[AnalysisDependencies],
     column_name: str
@@ -132,7 +139,7 @@ def get_column_statistics(
     return stats
 
 
-@analysis_agent.tool_plain
+@analysis_agent.tool
 def query_data(
     ctx: RunContext[AnalysisDependencies],
     query_type: str,
